@@ -4,74 +4,88 @@ using namespace std;
 
 #include "str.h"
 
-template<char V>
-struct UnitShow
+/*template<typename B, typename...>
+struct UnitTextImpl;
+
+template <typename B, typename Head, typename... Tail>
+struct UnitTextImpl<B, Head, Tail...>
 {
-	enum {text='0'+V};
+	typedef typename UnitTextImpl<
+			typename B::template add_char<'k'>::str,
+			Tail...
+		>::str str;
 };
 
-template<>
-struct UnitShow<0>
+template<typename B>
+struct UnitTextImpl<B>
 {
-	enum {text=' '};
-};
-/*
-template<char sign, int V>
-struct UnitSign
-{
-	const string text = string(sign);
-	//enum {text=sign};
-};
-
-template<char sign>
-struct UnitSign<sign, 0>
-{
-	const string text = string("");
-	//enum {text=' '};
+	typedef B str;
 };
 */
 
-
-/*template<int N, char... S>
-struct UnitPart
+template<int N, int L>
+struct Dimension 
 {
-	enum { n=N };
-	static const char value[sizeof...(S)+1];
+	enum { n=N, l=L };
 };
 
-template<int N, char... S>
-const char UnitPart<N, S...>::value[sizeof...(S)+1] = {
-	S...
-};
+template<int N, typename B, int...>
+struct UnitImpl;
 
-template<int N = 0, char... S>
-const char UnitPart<0, S...>::value[sizeof...(S)+1] = {
-	S...
-};*/
-
-template <typename Head, typename... Tail>
-struct UnitImpl
+template<typename B, int Head, int... Tail>
+struct UnitImpl<0, B, Head, Tail...>
 {
-	typedef typename UnitImpl<
-			typename B::template add_char<next>::type,
-			next, Tail...
-		>::type type;
+	typedef Dimension<Head, 1> dim;
+	typedef typename UnitImpl<1, typename B::template add_char<'m'>::str, Tail...>::unit unit;
 };
 
-template<int M, int K, int S>
+template<typename B, int Head, int... Tail>
+struct UnitImpl<1, B, Head, Tail...>
+{
+	typedef Dimension<Head, 1> dim;
+	typedef typename UnitImpl<2, typename B::template add_chars<'k', 'g'>::str, Tail...>::unit unit;
+};
+
+template<typename B, int Head, int... Tail>
+struct UnitImpl<2, B, Head, Tail...>
+{
+	typedef Dimension<Head, 1> dim;
+	typedef typename UnitImpl<3, typename B::template add_chars<'s'>::str, Tail...>::unit unit;
+};
+
+template<int N, typename B>
+struct UnitImpl<N, B>
+{
+	typedef B unit;
+};
+
+template<int M, int KG, int S>
 struct Unit { // a unit in the MKS system
-    enum { m=M, kg=K, s=S };
-	typedef Unit<M, K, S> unit;
-	
-	typedef StringBuilder<'u', 'n', 'i', 't', ' '> init_text;
-	typedef typename init_text::template cond_add_char<m!=0, 'm'>::str text1;
-	typedef typename text1::template cond_add_chars<kg!=0, 'k', 'g'>::str text2;
-	typedef typename text2::template cond_add_char<s!=0, 's'>::str text3;
-	
-	constexpr static const char * text = //text3::value;
-		typename StringBuilder<'u', 'n', 'i', 't', ' '>::template
+//    enum { m=M, kg=K, s=S };
+	typedef Dimension<M, 1> dim_m;
+	typedef Dimension<KG, 2> dim_kg;
+	typedef Dimension<S, 1> dim_s;
+	constexpr static int dims[3] = {M, KG, S};
+	enum { m = dim_m::n };
+	enum { kg = dim_kg::n };
+	enum { s = dim_s::n };
+	typedef typename UnitImpl<0, StringBuilder<>, M, KG, S>::unit unit;
+
+/*	typedef StringBuilder<'u', 'n', 'i', 't', ' '> init_text;
+	typedef typename init_text::template cond_add_char<(m<0), '/'>::str text_m1;
+	typedef typename text_m1::template cond_add_char<(m>0), '*'>::str text_m2;
+	typedef typename text_m2::template cond_add_char<m!=0, 'm'>::str text_m3;
+	typedef typename text_m3::template cond_add_char<(kg<0), '/'>::str text_k1;
+	typedef typename text_k1::template cond_add_char<(kg>0), '*'>::str text_k2;
+	typedef typename text_k2::template cond_add_chars<kg!=0, 'k', 'g'>::str text_k3;
+	typedef typename text_k3::template cond_add_char<(s<0), '/'>::str text_s1;
+	typedef typename text_s1::template cond_add_char<(s>0), '*'>::str text_s2;
+	typedef typename text_s2::template cond_add_char<s!=0, 's'>::str text_s3;
+*/	
+	constexpr static const char * text = unit::value;
+	/*	typename StringBuilder<'u', 'n', 'i', 't', ' '>::template
 		typename cond_add_char<m!=0, 'm'>::template str::
-		cond_add_char<kg!=0, 'k'>::str::value;
+		cond_add_char<kg!=0, 'k'>::str::value;*/
 		//cond_add_char<s!=0, 's'>::str::value;
 };
 
@@ -120,7 +134,8 @@ template<typename U>
 ostream &  operator << (ostream & str, const Value<U> & p)
 {
     str << p._val << " " << U::text;
-    return str;
+	str << endl << UnitImpl<0, StringBuilder<>, 1, 2, 6>::unit::value;
+	return str;
 }
 
 using Second = Unit<0,0,1>;  // s

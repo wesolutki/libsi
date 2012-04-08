@@ -2,7 +2,9 @@
 
 int main()
 {
-	Speed v1 = 10.m/2.5s;
+	double d;
+	cin >> d;
+	Speed v1 = Distance(d)/2.5s;
 	Speed v2 = 5.m/2.5s;
 	Time dist = (v1+v2) * 10.s / v2;
 	cout << v1 << endl;
