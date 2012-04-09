@@ -4,83 +4,34 @@ using namespace std;
 
 #include "str.h"
 
-/*template<typename B, typename...>
-struct UnitTextImpl;
-
-template <typename B, typename Head, typename... Tail>
-struct UnitTextImpl<B, Head, Tail...>
-{
-	typedef typename UnitTextImpl<
-			typename B::template add_char<'k'>::str,
-			Tail...
-		>::str str;
-};
-
-template<typename B>
-struct UnitTextImpl<B>
-{
-	typedef B str;
-};
-*/
-
 template<int N, int L>
 struct Dimension 
 {
 	enum { n=N, l=L };
 };
 
-template<int N, typename B, int...>
-struct UnitImpl;
-
-template<typename B, int Head, int... Tail>
-struct UnitImpl<0, B, Head, Tail...>
-{
-	typedef Dimension<Head, 1> dim;
-	typedef typename UnitImpl<1, typename B::template add_char<'m'>::str, Tail...>::unit unit;
-};
-
-template<typename B, int Head, int... Tail>
-struct UnitImpl<1, B, Head, Tail...>
-{
-	typedef Dimension<Head, 1> dim;
-	typedef typename UnitImpl<2, typename B::template add_chars<'k', 'g'>::str, Tail...>::unit unit;
-};
-
-template<typename B, int Head, int... Tail>
-struct UnitImpl<2, B, Head, Tail...>
-{
-	typedef Dimension<Head, 1> dim;
-	typedef typename UnitImpl<3, typename B::template add_chars<'s'>::str, Tail...>::unit unit;
-};
-
-template<int N, typename B>
-struct UnitImpl<N, B>
-{
-	typedef B unit;
-};
-
 template<int M, int KG, int S>
 struct Unit { // a unit in the MKS system
-    enum { m=M, kg=KG, s=S };
-	constexpr static string text()
+    //enum { m=M, kg=KG, s=S };
+	/*constexpr static string text()
 	{
-		string str("purek");
+		string str("purek   ");
 		str.push_back(' ');
 		str.push_back(M+48);
 		str.push_back(KG+48);
 		str.push_back(S+48);
 		return str;
-	}
-/*	typedef Dimension<M, 1> dim_m;
+	}*/
+	typedef Dimension<M, 1> dim_m;
 	typedef Dimension<KG, 2> dim_kg;
 	typedef Dimension<S, 1> dim_s;
 	constexpr static int dims[3] = {M, KG, S};
 	enum { m = dim_m::n };
 	enum { kg = dim_kg::n };
 	enum { s = dim_s::n };
-	typedef typename UnitImpl<0, StringBuilder<>, M, KG, S>::unit unit;
-*/
-/*	typedef StringBuilder<'u', 'n', 'i', 't', ' '> init_text;
+	typedef typename UnitTextImpl<0, true, StringBuilder<>, M, KG, S>::str str;
+
+	/*typedef StringBuilder<'u', 'n', 'i', 't', ' '> init_text;
 	typedef typename init_text::template cond_add_char<(m<0), '/'>::str text_m1;
 	typedef typename text_m1::template cond_add_char<(m>0), '*'>::str text_m2;
 	typedef typename text_m2::template cond_add_char<m!=0, 'm'>::str text_m3;
@@ -89,9 +40,9 @@ struct Unit { // a unit in the MKS system
 	typedef typename text_k2::template cond_add_chars<kg!=0, 'k', 'g'>::str text_k3;
 	typedef typename text_k3::template cond_add_char<(s<0), '/'>::str text_s1;
 	typedef typename text_s1::template cond_add_char<(s>0), '*'>::str text_s2;
-	typedef typename text_s2::template cond_add_char<s!=0, 's'>::str text_s3;
-*/	
-	//constexpr static const char * text = unit::value;
+	typedef typename text_s2::template cond_add_char<s!=0, 's'>::str unit;
+*/
+	constexpr static const char * text = str::value;
 	/*	typename StringBuilder<'u', 'n', 'i', 't', ' '>::template
 		typename cond_add_char<m!=0, 'm'>::template str::
 		cond_add_char<kg!=0, 'k'>::str::value;*/
@@ -142,8 +93,7 @@ struct Value {
 template<typename U>
 ostream &  operator << (ostream & str, const Value<U> & p)
 {
-    str << p._val << " " << U::text() << "purek";
-	str << endl << UnitImpl<0, StringBuilder<>, 1, 2, 6>::unit::value;
+    str << p._val << " " << U::text;
 	return str;
 }
 

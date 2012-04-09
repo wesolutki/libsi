@@ -9,10 +9,12 @@ int main()
 	Time dist = (v1+v2) * 10.s / v2;
 	cout << v1 << endl;
 	cout << v2 << endl;
+	cout << 10.m << endl;
+	cout << 20.s << endl;
 	cout << dist << endl;
 	Speed sum_v = v1 + v2;
 	cout << (v1 + v2) << endl;
-	cout << Value<Unit<5, 2, -7>>(5000) << endl;
+	cout << Value<Unit<1, -2, 1>>(5000) << endl;
 	
 	Meter meter;
 	Second second;
