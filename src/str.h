@@ -77,7 +77,7 @@ template<const char* Texts, const int* Lens, int N, typename B, int D, bool is_f
 struct UnitTextHelper
 {
 	typedef typename B::template cond_add_char<D<0, '/'>::str begin;
-	typedef typename div::template cond_add_char<(is_first==false & D>0), '*'>::str mul;
+	typedef typename begin::template cond_add_char<(is_first==false & D>0), '*'>::str mul;
 	typedef typename DimensionTextHelper<Texts, Lens, N, 0, Lens[N], mul>::str dimension;
 	typedef typename dimension::template cond_add_char<(D != 1 & D != -1 & D<0), (char)-D+48>::str min_val;
 	typedef typename min_val::template cond_add_char<(D != 1 & D != -1 & D>0), (char)D+48>::str str;

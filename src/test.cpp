@@ -14,7 +14,7 @@ int main()
 	cout << dist << endl;
 	Speed sum_v = v1 + v2;
 	cout << (v1 + v2) << endl;
-	cout << Value<Unit<1, -2, 5>>(5000) << endl;
+	cout << Value<UnitSI<1, -2, 5>>(5000) << endl;
 	
 	Meter meter;
 	Second second;
