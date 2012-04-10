@@ -13,8 +13,8 @@ int main()
 	cout << 20.s << endl;
 	cout << dist << endl;
 	Speed sum_v = v1 + v2;
-	cout << (v1 + v2) << endl;
-	cout << Value<UnitSI<1, -2, 5>>(5000) << endl;
+	cout << (v1 + v2) / 2.s << endl;
+	cout << Value<UnitSI<Dimensions<1, -2, 5>>>(5000) << endl;
 	
 	Meter meter;
 	Second second;

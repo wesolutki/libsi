@@ -91,21 +91,29 @@ struct UnitTextHelper<Texts, Lens, N, B, 0, is_first>
 
 // unit text implementation
 // created using recursive dimension execution
-template<const char* Texts, const int* Lens, int N, bool is_first, typename B, int...>
-struct UnitTextImpl;
+//template<const char* Texts, const int* Lens, int N, bool is_first, typename B, int...>
+//struct UnitTextImpl;
 
-template<const char* Texts, const int* Lens, int N, bool is_first, typename B, int Head, int... Tail>
-struct UnitTextImpl<Texts, Lens, N, is_first, B, Head, Tail...>
+template<const char* Texts, const int* Lens, int N, int M, bool is_first, typename B, typename Dims>
+struct UnitTextImpl//<Texts, Lens, N, is_first, B, Head, Tail...>
 {
 	typedef typename UnitTextImpl<	Texts, 
 									Lens, 
-									N+1, 
-									(is_first==true & Head==0), 
-									typename UnitTextHelper<Texts, Lens, N, B, Head, is_first>::str, Tail...>::str str;
+									N+1, M-1,
+									(is_first==true & Dims::val==0), 
+									typename UnitTextHelper<Texts, Lens, N, B, Dims::val, is_first>::str, 
+									typename Dims::next
+									>::str str;
 };
 
-template<const char* Texts, const int* Lens, int N, bool is_first, typename B>
-struct UnitTextImpl<Texts, Lens, N, is_first, B>
+template<const char* Texts, const int* Lens, int N, bool is_first, typename B, typename Dims>
+struct UnitTextImpl<Texts, Lens, N, 0, is_first, B, Dims>
 {
 	typedef B str;
+};
+
+template<const char* Texts, const int* Lens, typename Dims>
+struct UnitText
+{
+	typedef typename UnitTextImpl<Texts, Lens, 0, Dims::size, true, StringBuilder<>, typename Dims::dims>::str str;
 };
