@@ -1,6 +1,8 @@
+#ifndef __STR_H
+#define __STR_H
+
 // variadic template string builder
 template<char... S>
-
 struct StringBuilder
 {
 	// pushing-back back char(s)
@@ -91,11 +93,8 @@ struct UnitTextHelper<Texts, Lens, N, B, 0, is_first>
 
 // unit text implementation
 // created using recursive dimension execution
-//template<const char* Texts, const int* Lens, int N, bool is_first, typename B, int...>
-//struct UnitTextImpl;
-
 template<const char* Texts, const int* Lens, int N, int M, bool is_first, typename B, typename Dims>
-struct UnitTextImpl//<Texts, Lens, N, is_first, B, Head, Tail...>
+struct UnitTextImpl
 {
 	typedef typename UnitTextImpl<	Texts, 
 									Lens, 
@@ -115,5 +114,7 @@ struct UnitTextImpl<Texts, Lens, N, 0, is_first, B, Dims>
 template<const char* Texts, const int* Lens, typename Dims>
 struct UnitText
 {
-	typedef typename UnitTextImpl<Texts, Lens, 0, Dims::size, true, StringBuilder<>, typename Dims::dims>::str str;
+	typedef typename UnitTextImpl<Texts, Lens, 0, Dims::size, true, StringBuilder<>, typename Dims::els>::str str;
 };
+
+#endif // STR_H

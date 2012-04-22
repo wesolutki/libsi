@@ -14,10 +14,6 @@ int main()
 	cout << dist << endl;
 	Speed sum_v = v1 + v2;
 	cout << (v1 + v2) / 2.s << endl;
-	cout << Value<UnitSI<Dimensions<1, -2, 5>>>(5000) << endl;
-	
-	Meter meter;
-	Second second;
-	Speed u = Value<SpeedUnit>(5);
+	cout << AngularAcceleration(5000) << endl;
 	return 0;
 }
